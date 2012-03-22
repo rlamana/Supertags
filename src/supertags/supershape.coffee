@@ -15,30 +15,36 @@ namespace 'Supertags', (exports) ->
 
 		geometry: null
 		material: null
-		object: null
 
 		constructor: (type) ->
 			super()
 
 			@geometry = new THREE.Geometry()
-			@material = new THREE.LineBasicMaterial color: 0x0000ff
+			@material = new THREE.MeshNormalMaterial color: 0x0000ff
 
 			this.calculate()
-			this.setRenderMode('mesh')
+			this.setRenderMode('line')
 
 		setRenderMode: (mode) ->
-			if mode? is 'line'
-				@object = new THREE.Mesh(@geometry, @material)
-			else if mode? is 'particule'
-				@object = new THREE.Mesh(@geometry, @material)
+			if mode? and mode is 'line'
+				object = new THREE.Line @geometry, new THREE.LineBasicMaterial 
+					color: 0x0000ff
+				object.name = 'line'
+
+			else if mode? and mode is 'particule'
+				object = new THREE.ParticleSystem @geometry, new THREE.ParticleBasicMaterial 
+					color: 0xFF2211, 
+					opacity: 0.7,
+					size: 0.07 
+				object.name = 'particule'
 			else
-				@object = new THREE.Mesh(@geometry, @material)	
+				object = new THREE.Mesh @geometry, @material
+				object.doubleSided = true
+				object.name = 'mesh'
 
-			if object?
-				this.remove(@object)
-				this.add(@object)
-
-
+			this.add(object) if object?
+			this
+				
 		calculate: ->
 			N_X = Math.round 2*Math.PI/@step
 			N_Y = Math.round Math.PI/@step
@@ -91,8 +97,8 @@ namespace 'Supertags', (exports) ->
 					vertices.push(new THREE.Vertex(v))
 
 			# Calculate faces
-			for i in [0..N_X-1]
-				for j in [0..N_Y-1]	
+			for i in [0..N_X]
+				for j in [0..N_Y]	
 					faces.push(new THREE.Face4(
 						i * N_Y + j, 
 						i * N_Y + j + 1, 
