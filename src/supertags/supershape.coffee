@@ -16,8 +16,15 @@ namespace 'Supertags', (exports) ->
 		geometry: null
 		material: null
 
-		constructor: (type) ->
+		constructor: (parameters) ->
 			super()
+
+			if !!parameters
+				@n1 = parameters.n1;
+				@n2 = parameters.n2;
+				@n3 = parameters.n3;
+				@n4 = parameters.n4;
+
 
 			@geometry = new THREE.Geometry()
 			@material = new THREE.MeshNormalMaterial color: 0x0000ff

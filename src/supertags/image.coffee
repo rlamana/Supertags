@@ -6,11 +6,11 @@ namespace 'Supertags', (exports) ->
 		renderer: null
 		shape: null
 
-		constructor: ->
+		constructor: (width, height, parameters) ->
 			@scene = new THREE.Scene
 			@camera = new THREE.PerspectiveCamera(
 				20,    	# Field of view
-				window.innerWidth / window.innerHeight, # Aspect ratio
+				width / height, # Aspect ratio
 				1,		# Near plane
 				3000)	# Far plane
 
@@ -25,11 +25,11 @@ namespace 'Supertags', (exports) ->
 			@scene.add light
 
 			@renderer = new THREE.WebGLRenderer
-			@renderer.setSize(window.innerWidth, window.innerHeight)
+			@renderer.setSize(width, height)
 			@renderer.sortObjects = false
 
 			# Supershape
-			@shape = new Supertags.SuperShape()
+			@shape = new Supertags.SuperShape(parameters)
 			@scene.add @shape
 
 			this.render()

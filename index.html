@@ -18,7 +18,7 @@
 		<script src="lib/three.js"></script>
 		<script src="supertags.js"></script>
 		<script>
-			var image = new Supertags.Image;
+			var image = new Supertags.Image(window.innerWidth, window.innerHeight);
 			image.appendTo(document.body);
 			image.animate();
 		</script>

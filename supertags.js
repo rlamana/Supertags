@@ -30,12 +30,12 @@
 
       Image.prototype.shape = null;
 
-      function Image() {
+      function Image(width, height, parameters) {
         this.animate = __bind(this.animate, this);
         this.render = __bind(this.render, this);
         var light;
         this.scene = new THREE.Scene;
-        this.camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 3000);
+        this.camera = new THREE.PerspectiveCamera(20, width / height, 1, 3000);
         this.camera.position.set(1, 1, 10);
         this.camera.lookAt(this.scene.position);
         this.scene.add(this.camera);
@@ -45,9 +45,9 @@
         light.position.z = 130;
         this.scene.add(light);
         this.renderer = new THREE.WebGLRenderer;
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(width, height);
         this.renderer.sortObjects = false;
-        this.shape = new Supertags.SuperShape();
+        this.shape = new Supertags.SuperShape(parameters);
         this.scene.add(this.shape);
         this.render();
       }
@@ -106,8 +106,14 @@
 
       SuperShape.prototype.material = null;
 
-      function SuperShape(type) {
+      function SuperShape(parameters) {
         SuperShape.__super__.constructor.call(this);
+        if (!!parameters) {
+          this.n1 = parameters.n1;
+          this.n2 = parameters.n2;
+          this.n3 = parameters.n3;
+          this.n4 = parameters.n4;
+        }
         this.geometry = new THREE.Geometry();
         this.material = new THREE.MeshNormalMaterial({
           color: 0x0000ff
