@@ -1,12 +1,12 @@
 
-namespace 'Supertags', (exports) ->  
+namespace 'Supertags', (exports) ->
 	class exports.Image
 		scene: null
 		camera: null
 		renderer: null
 		shape: null
 
-		constructor: -> 
+		constructor: ->
 			@scene = new THREE.Scene
 			@camera = new THREE.PerspectiveCamera(
 				20,    	# Field of view

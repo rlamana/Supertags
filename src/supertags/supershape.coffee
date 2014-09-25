@@ -1,5 +1,5 @@
 
-namespace 'Supertags', (exports) ->  
+namespace 'Supertags', (exports) ->
 	class exports.SuperShape extends THREE.Object3D
 		# Public
 		step: 0.1
@@ -11,7 +11,7 @@ namespace 'Supertags', (exports) ->
 		a2: 1
 		scaler: .5
 
-		renderMode: 'mesh'
+		renderMode: 'line'
 
 		geometry: null
 		material: null
@@ -27,15 +27,15 @@ namespace 'Supertags', (exports) ->
 
 		setRenderMode: (mode) ->
 			if mode? and mode is 'line'
-				object = new THREE.Line @geometry, new THREE.LineBasicMaterial 
+				object = new THREE.Line @geometry, new THREE.LineBasicMaterial
 					color: 0x0000ff
 				object.name = 'line'
 
 			else if mode? and mode is 'particule'
-				object = new THREE.ParticleSystem @geometry, new THREE.ParticleBasicMaterial 
-					color: 0xFF2211, 
+				object = new THREE.ParticleSystem @geometry, new THREE.ParticleBasicMaterial
+					color: 0xFF2211,
 					opacity: 0.7,
-					size: 0.07 
+					size: 0.07
 				object.name = 'particule'
 			else
 				object = new THREE.Mesh @geometry, @material
@@ -44,7 +44,7 @@ namespace 'Supertags', (exports) ->
 
 			this.add(object) if object?
 			this
-				
+
 		calculate: ->
 			N_X = Math.round 2*Math.PI/@step
 			N_Y = Math.round Math.PI/@step
@@ -57,12 +57,12 @@ namespace 'Supertags', (exports) ->
 			for x in [0..N_X]
 				i = -Math.PI + x*@step
 
-				for y in [0..N_Y]				
+				for y in [0..N_Y]
 					j = -Math.PI/2.0 + y*@step
 
 					xx = 0
 					yy = 0
-					zz = 0             
+					zz = 0
 
 					t1 = Math.cos(@n1 * i/4)
 					t1 = 1/@a1 * Math.abs(t1)
@@ -94,21 +94,27 @@ namespace 'Supertags', (exports) ->
 					zz = r2 * Math.sin(j) * @scaler
 
 					v = new THREE.Vector3(xx, yy, zz)
-					vertices.push(new THREE.Vertex(v))
+					vertices.push(v)
 
 			# Calculate faces
 			for i in [0..N_X]
-				for j in [0..N_Y]	
-					faces.push(new THREE.Face4(
-						i * N_Y + j, 
-						i * N_Y + j + 1, 
-						(i + 1) * N_Y + j + 1, 
+				for j in [0..N_Y]
+					faces.push(new THREE.Face3(
+						i * N_Y + j,
+						i * N_Y + j + 1,
+						(i + 1) * N_Y + j + 1
+					))
+
+					faces.push(new THREE.Face3(
+						i * N_Y + j,
+						(i + 1) * N_Y + j + 1,
 						(i + 1) * N_Y + j
 					))
 
 			@geometry.vertices = vertices
 			@geometry.faces = faces
 
-			@geometry.computeFaceNormals()
-			@geometry.computeCentroids()
+			@geometry.computeFaceNormals();
+			@geometry.computeVertexNormals();
+			# @geometry.computeCentroids()
 
